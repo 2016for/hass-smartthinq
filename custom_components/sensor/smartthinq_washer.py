@@ -28,8 +28,10 @@ ATTR_INITIAL_TIME = 'initial_time'
 ATTR_RESERVE_TIME = 'reserve_time'
 ATTR_CURRENT_COURSE = 'current_course'
 ATTR_ERROR_STATE = 'error_state'
+ATTR_WASH_OPTION_STATE = 'wash_option_state'
 ATTR_SPIN_OPTION_STATE = 'spin_option_state'
 ATTR_WATERTEMP_OPTION_STATE = 'watertemp_option_state'
+ATTR_DRYLEVEL_STATE = 'drylevel_state'
 ATTR_CREASECARE_MODE = 'creasecare_mode'
 ATTR_CHILDLOCK_MODE = 'childlock_mode'
 ATTR_STEAM_MODE = 'steam_mode'
@@ -73,6 +75,7 @@ WATERTEMPSTATES = {
     'TWENTY' : wideq.STATE_WASHER_WATERTEMP_20,
     'THIRTY' : wideq.STATE_WASHER_WATERTEMP_30,
     'FOURTY' : wideq.STATE_WASHER_WATERTEMP_40,
+    'FIFTY' : wideq.STATE_WASHER_WATERTEMP_50,
     'SIXTY': wideq.STATE_WASHER_WATERTEMP_60,
     'NINTYFIVE': wideq.STATE_WASHER_WATERTEMP_95,
     'OFF': wideq.STATE_WASHER_POWER_OFF,
@@ -81,12 +84,34 @@ WATERTEMPSTATES = {
 
 SPINSPEEDSTATES = {
     'NOSPIN': wideq.STATE_WASHER_SPINSPEED_NOSPIN,
+    'MAX': wideq.STATE_WASHER_SPINSPEED_MAX,
     'SPIN_400' : wideq.STATE_WASHER_SPINSPEED_400,
-    'SPIN_800' : wideq.STATE_WASHER_SPINSPEED_800,
+    'SPIN_600' : wideq.STATE_WASHER_SPINSPEED_600,
+    'SPIN_700' : wideq.STATE_WASHER_SPINSPEED_700,
+    'SPIN_800': wideq.STATE_WASHER_SPINSPEED_800,
+    'SPIN_900': wideq.STATE_WASHER_SPINSPEED_900,
     'SPIN_1000' : wideq.STATE_WASHER_SPINSPEED_1000,
-    'SPIN_1200': wideq.STATE_WASHER_SPINSPEED_1200,
+    'SPIN_1100' : wideq.STATE_WASHER_SPINSPEED_1100,
+    'SPIN_1200' : wideq.STATE_WASHER_SPINSPEED_1200,
     'SPIN_1400': wideq.STATE_WASHER_SPINSPEED_1400,
+    'SPIN_1600': wideq.STATE_WASHER_SPINSPEED_1600,	
     'OFF': wideq.STATE_WASHER_POWER_OFF,
+}
+
+DRYLEVELSTATES = {
+    'IRON': wideq.STATE_WASHER_DRYLEVEL_IRON,
+    'NORMAL' : wideq.STATE_WASHER_DRYLEVEL_NORMAL,
+    'LOW' : wideq.STATE_WASHER_DRYLEVEL_LOW,
+    'ENERGY': wideq.STATE_WASHER_DRYLEVEL_ENERGY,
+    'ECO': wideq.STATE_WASHER_DRYLEVEL_ECO,
+    'SPEED': wideq.STATE_WASHER_DRYLEVEL_SPEED,
+    'COOLING' : wideq.STATE_WASHER_DRYLEVEL_COOLING,
+    'VERY' : wideq.STATE_WASHER_DRYLEVEL_VERY,	
+    'TIME_30' : wideq.STATE_WASHER_DRYLEVEL_TIME_30,
+    'TIME_60': wideq.STATE_WASHER_DRYLEVEL_TIME_60,
+    'TIME_90': wideq.STATE_WASHER_DRYLEVEL_TIME_90,
+    'TIME_120': wideq.STATE_WASHER_DRYLEVEL_TIME_120,
+    'TIME_150': wideq.STATE_WASHER_DRYLEVEL_TIME_150,
 }
 
 ERRORS = {
@@ -179,8 +204,10 @@ class LGEWASHERDEVICE(LGEDevice):
         data[ATTR_RESERVE_TIME] = self.reserve_time
         data[ATTR_CURRENT_COURSE] = self.current_course
         data[ATTR_ERROR_STATE] = self.error_state
+	data[ATTR_WASH_OPTION_STATE] = self.wash_option_state
         data[ATTR_SPIN_OPTION_STATE] = self.spin_option_state
         data[ATTR_WATERTEMP_OPTION_STATE] = self.watertemp_option_state
+	data[ATTR_DRYLEVEL_STATE] = self.drylevel_state
         data[ATTR_CREASECARE_MODE] = self.creasecare_mode
         data[ATTR_CHILDLOCK_MODE] = self.childlock_mode
         data[ATTR_STEAM_MODE] = self.steam_mode
@@ -280,8 +307,16 @@ class LGEWASHERDEVICE(LGEDevice):
             if watertemp_option == 'OFF':
                 return WATERTEMPSTATES['OFF']
             else:
-                return WATERTEMPSTATES[watertemp_option.name]
+                return WATERTEMPSTATES[watertemp_option.name]	
 
+    @property
+    def drylevel_state(self):
+        if self._state:
+            drylevel = self._state.drylevel_option_state
+            if drylevel == 'OFF':
+                return DRYLEVELSTATES['OFF']
+            else:
+                return DRYLEVELSTATES[drylevel.name]	
     @property
     def creasecare_mode(self):
         if self._state:
