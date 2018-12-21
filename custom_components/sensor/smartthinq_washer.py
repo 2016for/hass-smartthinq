@@ -28,17 +28,17 @@ ATTR_INITIAL_TIME = 'initial_time'
 ATTR_RESERVE_TIME = 'reserve_time'
 ATTR_CURRENT_COURSE = 'current_course'
 ATTR_ERROR_STATE = 'error_state'
-ATTR_WASH_OPTION_STATE = 'wash_option_state'
 ATTR_SPIN_OPTION_STATE = 'spin_option_state'
 ATTR_WATERTEMP_OPTION_STATE = 'watertemp_option_state'
-ATTR_RINSECOUNT_OPTION_STATE = 'rinsecount_option_state'
-ATTR_DRYLEVEL_STATE = 'drylevel_state'
-ATTR_FRESHCARE_MODE = 'freshcare_mode'
+ATTR_CREASECARE_MODE = 'creasecare_mode'
 ATTR_CHILDLOCK_MODE = 'childlock_mode'
 ATTR_STEAM_MODE = 'steam_mode'
-ATTR_TURBOSHOT_MODE = 'turboshot_mode'
+ATTR_STEAM_SOFTENER_MODE = 'steam_softener_mode'
+ATTR_DOORLOCK_MODE = 'doorlock_mode'
+ATTR_PREWASH_MODE = 'prewash_mode'
+ATTR_REMOTESTART_MODE = 'remotestart_mode'
+ATTR_TURBOWASH_MODE = 'turbowash_mode'
 ATTR_TUBCLEAN_COUNT = 'tubclean_count'
-ATTR_LOAD_LEVEL = 'load_level'
 
 RUNSTATES = {
     'OFF': wideq.STATE_WASHER_POWER_OFF,
@@ -55,8 +55,11 @@ RUNSTATES = {
     'RINSE_HOLD': wideq.STATE_WASHER_RINSE_HOLD,
     'SPINNING': wideq.STATE_WASHER_SPINNING,
     'DRYING': wideq.STATE_WASHER_DRYING,
-    'END': wideq.STATE_DRYER_END,
-    'FRESHCARE': wideq.STATE_WASHER_FRESHCARE,
+    'END': wideq.STATE_WASHER_END,
+    'REFRESHWITHSTEAM': wideq.STATE_WASHER_REFRESHWITHSTEAM,
+    'COOLDOWN': wideq.STATE_WASHER_COOLDOWN,
+    'STEAMSOFTENING': wideq.STATE_WASHER_STEAMSOFTENING,
+    'ERRORSTATE': wideq.STATE_WASHER_ERRORSTATE,
     'TCL_ALARM_NORMAL': wideq.STATE_WASHER_TCL_ALARM_NORMAL,
     'FROZEN_PREVENT_INITIAL': wideq.STATE_WASHER_FROZEN_PREVENT_INITIAL,
     'FROZEN_PREVENT_RUNNING': wideq.STATE_WASHER_FROZEN_PREVENT_RUNNING,
@@ -64,20 +67,10 @@ RUNSTATES = {
     'ERROR': wideq.STATE_WASHER_ERROR,
 }
 
-SOILLEVELSTATES = {
-    'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
-    'LIGHT': wideq.STATE_WASHER_SOILLEVEL_LIGHT,
-    'NORMAL': wideq.STATE_WASHER_SOILLEVEL_NORMAL,
-    'HEAVY': wideq.STATE_WASHER_SOILLEVEL_HEAVY,
-    'PRE_WASH': wideq.STATE_WASHER_SOILLEVEL_PRE_WASH,
-    'SOAKING': wideq.STATE_WASHER_SOILLEVEL_SOAKING,
-    'OFF': wideq.STATE_WASHER_POWER_OFF,
-
-}
-
 WATERTEMPSTATES = {
     'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
     'COLD' : wideq.STATE_WASHER_WATERTEMP_COLD,
+    'TWENTY' : wideq.STATE_WASHER_WATERTEMP_20,
     'THIRTY' : wideq.STATE_WASHER_WATERTEMP_30,
     'FOURTY' : wideq.STATE_WASHER_WATERTEMP_40,
     'SIXTY': wideq.STATE_WASHER_WATERTEMP_60,
@@ -87,34 +80,12 @@ WATERTEMPSTATES = {
 }
 
 SPINSPEEDSTATES = {
-    'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
-    'EXTRA_LOW' : wideq.STATE_WASHER_SPINSPEED_EXTRA_LOW,
-    'LOW' : wideq.STATE_WASHER_SPINSPEED_LOW,
-    'MEDIUM' : wideq.STATE_WASHER_SPINSPEED_MEDIUM,
-    'HIGH': wideq.STATE_WASHER_SPINSPEED_HIGH,
-    'EXTRA_HIGH': wideq.STATE_WASHER_SPINSPEED_EXTRA_HIGH,
-    'OFF': wideq.STATE_WASHER_POWER_OFF,
-}
-
-RINSECOUNTSTATES = {
-    'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
-    'ONE' : wideq.STATE_WASHER_RINSECOUNT_1,
-    'TWO' : wideq.STATE_WASHER_RINSECOUNT_2,
-    'THREE' : wideq.STATE_WASHER_RINSECOUNT_3,
-    'FOUR': wideq.STATE_WASHER_RINSECOUNT_4,
-    'FIVE': wideq.STATE_WASHER_RINSECOUNT_5,
-    'OFF': wideq.STATE_WASHER_POWER_OFF,
-}
-
-DRYLEVELSTATES = {
-    'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
-    'WIND' : wideq.STATE_WASHER_DRYLEVEL_WIND,
-    'TURBO' : wideq.STATE_WASHER_DRYLEVEL_TURBO,
-    'TIME_30' : wideq.STATE_WASHER_DRYLEVEL_TIME_30,
-    'TIME_60': wideq.STATE_WASHER_DRYLEVEL_TIME_60,
-    'TIME_90': wideq.STATE_WASHER_DRYLEVEL_TIME_90,
-    'TIME_120': wideq.STATE_WASHER_DRYLEVEL_TIME_120,
-    'TIME_150': wideq.STATE_WASHER_DRYLEVEL_TIME_150,
+    'NOSPIN': wideq.STATE_WASHER_SPINSPEED_NOSPIN,
+    'SPIN_400' : wideq.STATE_WASHER_SPINSPEED_400,
+    'SPIN_800' : wideq.STATE_WASHER_SPINSPEED_800,
+    'SPIN_1000' : wideq.STATE_WASHER_SPINSPEED_1000,
+    'SPIN_1200': wideq.STATE_WASHER_SPINSPEED_1200,
+    'SPIN_1400': wideq.STATE_WASHER_SPINSPEED_1400,
     'OFF': wideq.STATE_WASHER_POWER_OFF,
 }
 
@@ -136,7 +107,7 @@ ERRORS = {
     'ERROR_dE1' : wideq.STATE_WASHER_ERROR_dE1,
     'ERROR_LOE' : wideq.STATE_WASHER_ERROR_LOE,        
     'NO_ERROR' : wideq.STATE_NO_ERROR,
-    'OFF': wideq.STATE_DRYER_POWER_OFF,
+    'OFF': wideq.STATE_WASHER_POWER_OFF,
 }
 
 OPTIONITEMMODES = {
@@ -208,17 +179,17 @@ class LGEWASHERDEVICE(LGEDevice):
         data[ATTR_RESERVE_TIME] = self.reserve_time
         data[ATTR_CURRENT_COURSE] = self.current_course
         data[ATTR_ERROR_STATE] = self.error_state
-        data[ATTR_WASH_OPTION_STATE] = self.wash_option_state
         data[ATTR_SPIN_OPTION_STATE] = self.spin_option_state
         data[ATTR_WATERTEMP_OPTION_STATE] = self.watertemp_option_state
-        data[ATTR_RINSECOUNT_OPTION_STATE] = self.rinsecount_option_state
-        data[ATTR_DRYLEVEL_STATE] = self.drylevel_state
-        data[ATTR_FRESHCARE_MODE] = self.freshcare_mode
+        data[ATTR_CREASECARE_MODE] = self.creasecare_mode
         data[ATTR_CHILDLOCK_MODE] = self.childlock_mode
         data[ATTR_STEAM_MODE] = self.steam_mode
-        data[ATTR_TURBOSHOT_MODE] = self.turboshot_mode
+        data[ATTR_STEAM_SOFTENER_MODE] = self.steam_softener_mode
+        data[ATTR_DOORLOCK_MODE] = self.doorlock_mode
+        data[ATTR_PREWASH_MODE] = self.prewash_mode
+        data[ATTR_REMOTESTART_MODE] = self.remotestart_mode
+        data[ATTR_TURBOWASH_MODE] = self.turbowash_mode
         data[ATTR_TUBCLEAN_COUNT] = self.tubclean_count
-        data[ATTR_LOAD_LEVEL] = self.load_level
         return data
 
     @property
@@ -283,7 +254,7 @@ class LGEWASHERDEVICE(LGEDevice):
             if course == '다운로드코스':
                 return smartcourse
             elif course == 'OFF':
-                return '꺼짐'
+                return 'Off'
             else:
                 return course
 
@@ -292,16 +263,6 @@ class LGEWASHERDEVICE(LGEDevice):
         if self._state:
             error = self._state.error_state
             return ERRORS[error]
-
-
-    @property
-    def wash_option_state(self):
-        if self._state:
-            wash_option = self._state.wash_option_state
-            if wash_option == 'OFF':
-                return SOILLEVELSTATES['OFF']
-            else:
-                return SOILLEVELSTATES[wash_option.name]
 
     @property
     def spin_option_state(self):
@@ -322,27 +283,9 @@ class LGEWASHERDEVICE(LGEDevice):
                 return WATERTEMPSTATES[watertemp_option.name]
 
     @property
-    def rinsecount_option_state(self):
+    def creasecare_mode(self):
         if self._state:
-            rinsecount_option = self._state.rinsecount_option_state
-            if rinsecount_option == 'OFF':
-                return RINSECOUNTSTATES['OFF']
-            else:
-                return RINSECOUNTSTATES[rinsecount_option.name]
-
-    @property
-    def drylevel_state(self):
-        if self._state:
-            drylevel = self._state.drylevel_option_state
-            if drylevel == 'OFF':
-                return DRYLEVELSTATES['OFF']
-            else:
-                return DRYLEVELSTATES[drylevel.name]
-
-    @property
-    def freshcare_mode(self):
-        if self._state:
-            mode = self._state.freshcare_state
+            mode = self._state.creasecare_state
             return OPTIONITEMMODES[mode]
 
     @property
@@ -358,30 +301,39 @@ class LGEWASHERDEVICE(LGEDevice):
             return OPTIONITEMMODES[mode]
 
     @property
-    def turboshot_mode(self):
+    def steam_softener_mode(self):
         if self._state:
-            mode = self._state.turboshot_state
+            mode = self._state.steam_softener_state
+            return OPTIONITEMMODES[mode]
+
+    @property
+    def prewash_mode(self):
+        if self._state:
+            mode = self._state.prewash_state
+            return OPTIONITEMMODES[mode]
+
+    @property
+    def doorlock_mode(self):
+        if self._state:
+            mode = self._state.doorlock_state
+            return OPTIONITEMMODES[mode]
+
+    @property
+    def remotestart_mode(self):
+        if self._state:
+            mode = self._state.remotestart_state
+            return OPTIONITEMMODES[mode]
+
+    @property
+    def turbowash_mode(self):
+        if self._state:
+            mode = self._state.turbowash_state
             return OPTIONITEMMODES[mode]
 
     @property
     def tubclean_count(self):
         if self._state:
             return self._state.tubclean_count
-    
-    @property
-    def load_level(self):
-        if self._state:
-            load_level = self._state.load_level
-            if load_level == 1:
-                return '소량'
-            elif load_level == 2:
-                return '적음'
-            elif load_level == 3:
-                return '보통'
-            elif load_level == 4:
-                return '많음'
-            else:
-                return '없음'
 
     def update(self):
 
