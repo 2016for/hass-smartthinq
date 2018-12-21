@@ -1,16 +1,16 @@
 Home Assistant: LG SmartThinQ Component
 =======================================
 Support for LG Smartthinq device.
-This is made for korean only.
-If you want to apply other county devices, you have to change this code for your country
+This is made for India only.
+If you want to apply other county devices, you may have to change this code for your country
 
-This is made by sampsyo, I forked and add more device in it
+This is made by sampsyo, wideq & knackrack615. I forked to add Indian devices to it
 
 
 A [Home Assistant][hass] component for controlling LG HVAC devices via their SmartThinQ platform, based on [WideQ][].
 
 [hass]: https://home-assistant.io
-[wideq]: https://github.com/wkd8176/wideq
+[wideq]: https://github.com/2016for/wideq
 
 Here's how to use this:
 
@@ -18,14 +18,14 @@ Here's how to use this:
 
        $ cd ~/.homeassistant
        $ mkdir wideq
-       $ git clone https://github.com/wkd8176/wideq.git wideq
+       $ git clone https://github.com/2016for/wideq.git wideq
        $ cd wideq
        $ pip3 install -e .
 
 2. Clone this repository into your `~/.homeassistant` directory
 
        $ cd ~/.homeassistant
-       $ git clone https://github.com/wkd8176/hass-smartthinq.git
+       $ git clone https://github.com/2016for/hass-smartthinq.git
 
 3. Authenticate with the SmartThinQ service to get a refresh token by running the WideQ example script. (Eventually, I would like to add a feature to the Home Assistant component that can let you log in through a UI, but I haven't gotten there yet.) Run this in the `wideq` directory:
 
@@ -55,7 +55,9 @@ Here's how to use this:
 Credits
 -------
 
-This is by [Adrian Sampson][adrian]. The license is [MIT][].
+This is by [Adrian Sampson][adrian] & [wkd8176]. The license is [MIT][].
 
 [adrian]: http://www.cs.cornell.edu/~asampson/
 [mit]: https://opensource.org/licenses/MIT
+[wkd8176]: https://github.com/wkd8176/
+[knackrack615]: https://github.com/knackrack615/
