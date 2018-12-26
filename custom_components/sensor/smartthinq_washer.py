@@ -6,7 +6,7 @@ import time
 
 from homeassistant.components import sensor
 from custom_components.smartthinq import (
-	DOMAIN, LGE_DEVICES, LGEDevice)
+    DOMAIN, LGE_DEVICES, LGEDevice)
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     ATTR_ENTITY_ID, CONF_TOKEN, CONF_ENTITY_ID)
@@ -20,7 +20,7 @@ DEPENDENCIES = ['smartthinq']
 
 LGE_WASHER_DEVICES = 'lge_washer_devices'
 
-ATTR_CURRENT_STATUS = 'current_status'
+# ATTR_CURRENT_STATUS = 'current_status'
 ATTR_RUN_STATE = 'run_state'
 ATTR_PRE_STATE = 'pre_state'
 ATTR_REMAIN_TIME = 'remain_time'
@@ -28,8 +28,9 @@ ATTR_INITIAL_TIME = 'initial_time'
 ATTR_RESERVE_TIME = 'reserve_time'
 ATTR_CURRENT_COURSE = 'current_course'
 ATTR_ERROR_STATE = 'error_state'
-ATTR_WASH_OPTION_STATE = 'wash_option_state'
 ATTR_SPIN_OPTION_STATE = 'spin_option_state'
+ATTR_WASH_OPTION_STATE = 'wash_option_state'
+ATTR_RINSE_OPTION_STATE = 'rinse_option_state'
 ATTR_WATERTEMP_OPTION_STATE = 'watertemp_option_state'
 ATTR_DRYLEVEL_STATE = 'drylevel_state'
 ATTR_CREASECARE_MODE = 'creasecare_mode'
@@ -82,6 +83,25 @@ WATERTEMPSTATES = {
 
 }
 
+SOILLEVELSTATES = {
+    'NO_SELECT': wideq.STATE_WASHER_TERM_NO_SELECT,
+    'LIGHT': wideq.STATE_WASHER_SOILLEVEL_LIGHT,
+    'NORMAL': wideq.STATE_WASHER_SOILLEVEL_NORMAL,
+    'HEAVY': wideq.STATE_WASHER_SOILLEVEL_HEAVY,
+    'PRE_WASH': wideq.STATE_WASHER_SOILLEVEL_PRE_WASH,
+    'SOAKING': wideq.STATE_WASHER_SOILLEVEL_SOAKING,
+    'OFF': wideq.STATE_WASHER_POWER_OFF,
+
+}
+
+WASHOPTIONSTATES = {
+    'NORMAL' : wideq.STATE_WASHER_WASHOPTION_NORMAL,
+    'TURBO WASH' : wideq.STATE_WASHER_WASHOPTION_TURBO_WASH,
+    'INTENSIVE' : wideq.STATE_WASHER_WASHOPTION_INTENSIVE,
+    'TIMESAVE' : wideq.STATE_WASHER_WASHOPTION_TIMESAVE,
+    'OFF': wideq.STATE_WASHER_POWER_OFF,
+}
+
 SPINSPEEDSTATES = {
     'NOSPIN': wideq.STATE_WASHER_SPINSPEED_NOSPIN,
     'MAX': wideq.STATE_WASHER_SPINSPEED_MAX,
@@ -94,7 +114,16 @@ SPINSPEEDSTATES = {
     'SPIN_1100' : wideq.STATE_WASHER_SPINSPEED_1100,
     'SPIN_1200' : wideq.STATE_WASHER_SPINSPEED_1200,
     'SPIN_1400': wideq.STATE_WASHER_SPINSPEED_1400,
-    'SPIN_1600': wideq.STATE_WASHER_SPINSPEED_1600,	
+    'SPIN_1600': wideq.STATE_WASHER_SPINSPEED_1600, 
+    'OFF': wideq.STATE_WASHER_POWER_OFF,
+}
+
+RINSEOPTIONSTATES = {
+    'RINSE++' : wideq.STATE_WASHER_RINSEOPTION_RINSE_PLUS_PLUS,
+    'NORMAL' : wideq.STATE_WASHER_RINSEOPTION_NORMAL,
+    'NORMALHOLD' : wideq.STATE_WASHER_RINSEOPTION_NORMALHOLD,
+    'RINSE+' : wideq.STATE_WASHER_RINSEOPTION_RINSE_PLUS,
+    'RINSE+HOLD' : wideq.STATE_WASHER_RINSEOPTION_RINSE_PLUS_HOLD,
     'OFF': wideq.STATE_WASHER_POWER_OFF,
 }
 
@@ -106,12 +135,13 @@ DRYLEVELSTATES = {
     'ECO': wideq.STATE_WASHER_DRYLEVEL_ECO,
     'SPEED': wideq.STATE_WASHER_DRYLEVEL_SPEED,
     'COOLING' : wideq.STATE_WASHER_DRYLEVEL_COOLING,
-    'VERY' : wideq.STATE_WASHER_DRYLEVEL_VERY,	
+    'VERY' : wideq.STATE_WASHER_DRYLEVEL_VERY,  
     'TIME_30' : wideq.STATE_WASHER_DRYLEVEL_TIME_30,
     'TIME_60': wideq.STATE_WASHER_DRYLEVEL_TIME_60,
     'TIME_90': wideq.STATE_WASHER_DRYLEVEL_TIME_90,
     'TIME_120': wideq.STATE_WASHER_DRYLEVEL_TIME_120,
     'TIME_150': wideq.STATE_WASHER_DRYLEVEL_TIME_150,
+    'OFF': wideq.STATE_WASHER_POWER_OFF,
 }
 
 ERRORS = {
@@ -161,7 +191,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         if device.type == wideq.DeviceType.WASHER:
             try:
-            	washer_entity = LGEWASHERDEVICE(client, device)
+                washer_entity = LGEWASHERDEVICE(client, device)
             except wideq.NotConnectError:
                 LOGGER.info('Connection Lost. Retrying.')
                 raise PlatformNotReady
@@ -204,10 +234,11 @@ class LGEWASHERDEVICE(LGEDevice):
         data[ATTR_RESERVE_TIME] = self.reserve_time
         data[ATTR_CURRENT_COURSE] = self.current_course
         data[ATTR_ERROR_STATE] = self.error_state
-	data[ATTR_WASH_OPTION_STATE] = self.wash_option_state
+        data[ATTR_WASH_OPTION_STATE] = self.wash_option_state
         data[ATTR_SPIN_OPTION_STATE] = self.spin_option_state
+        data[ATTR_RINSE_OPTION_STATE] = self.rinse_option_state
         data[ATTR_WATERTEMP_OPTION_STATE] = self.watertemp_option_state
-	data[ATTR_DRYLEVEL_STATE] = self.drylevel_state
+        data[ATTR_DRYLEVEL_STATE] = self.drylevel_state
         data[ATTR_CREASECARE_MODE] = self.creasecare_mode
         data[ATTR_CHILDLOCK_MODE] = self.childlock_mode
         data[ATTR_STEAM_MODE] = self.steam_mode
@@ -223,6 +254,13 @@ class LGEWASHERDEVICE(LGEDevice):
     def is_on(self):
         if self._state:
             return self._state.is_on
+            
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        if self._state:
+            run = self._state.run_state
+            return RUNSTATES[run.name]
 
     @property
     def current_run_state(self):
@@ -290,7 +328,25 @@ class LGEWASHERDEVICE(LGEDevice):
         if self._state:
             error = self._state.error_state
             return ERRORS[error]
+                
+    @property
+    def rinse_option_state(self):
+        if self._state:
+            rinse_option = self._state.rinse_option_state
+            if rinse_option == 'OFF':
+                return RINSEOPTIONSTATES['OFF']
+            else:
+                return RINSEOPTIONSTATES[rinse_option.name]
 
+    @property
+    def wash_option_state(self):
+        if self._state:
+            wash_option = self._state.wash_option_state
+            if wash_option == 'OFF':
+                return WASHOPTIONSTATES['OFF']
+            else:
+                return WASHOPTIONSTATES[wash_option.name]                
+    
     @property
     def spin_option_state(self):
         if self._state:
@@ -307,7 +363,7 @@ class LGEWASHERDEVICE(LGEDevice):
             if watertemp_option == 'OFF':
                 return WATERTEMPSTATES['OFF']
             else:
-                return WATERTEMPSTATES[watertemp_option.name]	
+                return WATERTEMPSTATES[watertemp_option.name]   
 
     @property
     def drylevel_state(self):
@@ -316,7 +372,7 @@ class LGEWASHERDEVICE(LGEDevice):
             if drylevel == 'OFF':
                 return DRYLEVELSTATES['OFF']
             else:
-                return DRYLEVELSTATES[drylevel.name]	
+                return DRYLEVELSTATES[drylevel.name]    
     @property
     def creasecare_mode(self):
         if self._state:
